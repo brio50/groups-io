@@ -13,7 +13,6 @@ def json_read(file_abs):
 
     # key assumption: for every "file.ext," "file.ext.json" exists
     # this seems to be the behavior for groups.io aws file or photo dump/backup according to
-    # https://groups.io/helpcenter/membersmanual/1/understanding-groups-io-accounts/exporting-your-account-data
     json_file = open(json_name, 'r')
     json_val = json.load(json_file)
     json_file.close()
