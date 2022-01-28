@@ -17,6 +17,7 @@ There are 3 tiers of groups.io: basic (free), premium, and enterprise. We're on 
 
 > **Note**: I wrote these scripts to work for any groups.io community. The only Haringe-Lathe group tailored component is guessing of "Category" and "Model" field names within `file_sweep.py`
 
+> **Note**: If a shadow `*.json` file does not exist the tool is currently set to fail. The `Created` and `Description` fields would be missing.
 
 ---
 
