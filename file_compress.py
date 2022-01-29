@@ -41,15 +41,24 @@ def file_compress(src):
                 if os.path.exists(file_abs):
                     info = compress(file_abs, file_abs_compressed, 4)
 
+                    initial_size = info[0]
+                    final_size = info[1]
+                    compression_ratio = info[2]
+
+                    # if we cannot do better than original, use it
+                    if final_size > initial_size:
+                        os.remove(file_abs_compressed)
+                        shutil.copy(file_abs, dest)
+
                     rows.append(
-                        [file_name, info[0], info[1], info[2]])
+                        [file_name, initial_size, final_size, compression_ratio])
 
     df = pd.DataFrame(rows,
                       columns=['File', 'Initial Size (MB)', 'Final Size (MB)', 'Compression Ratio (%)'])
     print(df)
 
     # export dataframe to csv file
-    df.to_csv('pdf_compress.csv', sep=',', encoding='utf-8')
+    df.to_csv('file_compress.csv', sep=',', encoding='utf-8')
 
 
 def main():

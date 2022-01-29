@@ -22,7 +22,7 @@ import sys
 import shutil
 
 
-def compress(input_file_path, output_file_path, level=0):
+def compress(input_file_path, output_file_path, level=0, method=1):
     """Function to compress PDF via Ghostscript command line interface"""
     quality = {
         0: '/default',
@@ -38,7 +38,7 @@ def compress(input_file_path, output_file_path, level=0):
         sys.exit(1)
 
     # Check if file is a PDF by extension
-    if input_file_path.split('.')[-1].lower() != 'pdf': # not sure this is the most robust solution
+    if input_file_path.split('.')[-1].lower() != 'pdf':  # not sure this is the most robust solution
         print(f"Error: input file is not a PDF: {input_file_path}")
         sys.exit(1)
 
@@ -46,45 +46,49 @@ def compress(input_file_path, output_file_path, level=0):
     file_name = input_file_path.split('/')[-1]  # everything after last '/'
     print("Compressing PDF \"{}\"...".format(file_name))
 
-    # cmd = [gs, '-sDEVICE=pdfwrite', '-dCompatibilityLevel=1.4',
-    #        '-dPDFSETTINGS={}'.format(quality[power]),
-    #        '-dNOPAUSE', '-dQUIET', '-dBATCH', '-dSAFER',
-    #        '-dDetectDuplicateImages=true',
-    #        '-sOutputFile={}'.format(output_file_path),
-    #        input_file_path]
-
-    # https://gist.github.com/lkraider/f0888da30bc352f9d167dfa4f4fc8213
-    cmd = [gs, '-sDEVICE=pdfwrite',
-           '-dPDFSETTINGS={}'.format(quality[level]),
-           '-dNOPAUSE', '-dQUIET', '-dBATCH', '-dSAFER',
-           '-dCompatibilityLevel=1.4',
-           # font settings
-           '-dSubsetFonts=true',
-           '-dCompressFonts=true',
-           '-dEmbedAllFonts=true',
-           # color format`
-           '-sProcessColorModel=DeviceRGB',
-           '-sColorConversionStrategy=RGB',
-           '-sColorConversionStrategyForImages=RGB',
-           '-dConvertCMYKImagesToRGB=true',
-           # image resample
-           '-dDetectDuplicateImages=true',
-           '-dColorImageDownsampleType=/Bicubic',
-           '-dColorImageResolution=150',
-           '-dGrayImageDownsampleType=/Bicubic',
-           '-dGrayImageResolution=150',
-           '-dMonoImageDownsampleType=/Subsample',
-           '-dMonoImageResolution=150',
-           '-dDownsampleColorImages=true',
-           # preset overrides
-           '-dDoThumbnails=false',
-           '-dCreateJobTicket=false',
-           '-dPreserveEPSInfo=false',
-           '-dPreserveOPIComments=false',
-           '-dPreserveOverprintSettings=false',
-           '-dUCRandBGInfo=/Remove',
-           '-sOutputFile={}'.format(output_file_path),
-           input_file_path]
+    if method == 1:
+        # https://gist.github.com/lkraider/f0888da30bc352f9d167dfa4f4fc8213
+        cmd = [gs, '-sDEVICE=pdfwrite',
+               '-dNumRenderingThreads=2',
+               '-dPDFSETTINGS={}'.format(quality[level]),
+               '-dCompatibilityLevel=1.5',
+               '-dNOPAUSE', '-dQUIET', '-dBATCH', '-dSAFER',
+               # font settings
+               '-dSubsetFonts=true',
+               '-dCompressFonts=true',
+               '-dEmbedAllFonts=true',
+               # color format`
+               '-sProcessColorModel=DeviceRGB',
+               '-sColorConversionStrategy=RGB',
+               '-sColorConversionStrategyForImages=RGB',
+               '-dConvertCMYKImagesToRGB=true',
+               # image resample
+               '-dDetectDuplicateImages=true',
+               '-dColorImageDownsampleType=/Bicubic',
+               '-dColorImageResolution=150',
+               '-dGrayImageDownsampleType=/Bicubic',
+               '-dGrayImageResolution=150',
+               '-dMonoImageDownsampleType=/Subsample',
+               '-dMonoImageResolution=150',
+               '-dDownsampleColorImages=true',
+               # preset overrides
+               '-dDoThumbnails=false',
+               '-dCreateJobTicket=false',
+               '-dPreserveEPSInfo=false',
+               '-dPreserveOPIComments=false',
+               '-dPreserveOverprintSettings=false',
+               '-dUCRandBGInfo=/Remove',
+               '-sOutputFile={}'.format(output_file_path),
+               input_file_path]
+    elif method == 2:
+        cmd = [gs, '-sDEVICE=pdfwrite',
+               '-dNumRenderingThreads=2',
+               '-dPDFSETTINGS={}'.format(quality[level]),
+               '-dCompatibilityLevel=1.5',
+               '-dNOPAUSE', '-dQUIET', '-dBATCH', '-dSAFER',
+               '-dDetectDuplicateImages=true',
+               '-sOutputFile={}'.format(output_file_path),
+               input_file_path]
 
     try:
         # execute
@@ -97,15 +101,25 @@ def compress(input_file_path, output_file_path, level=0):
         raise Exception(f"Ghostscript failed to create {output_file_path}, time to debug...\n",
                         " ".join(cmd))
 
-    initial_size = round(os.path.getsize(input_file_path) / (1024*1024), 2)
-    final_size = round(os.path.getsize(output_file_path) / (1024*1024), 2)
+    initial_size = round(os.path.getsize(input_file_path) / (1024 * 1024), 2)
+    final_size = round(os.path.getsize(output_file_path) / (1024 * 1024), 2)
     ratio = round(100 - ((final_size / initial_size) * 100), 1)
 
     print(f"Initial file size is {initial_size}MB",
           f"; Final file size is {final_size}MB",
           f"; Compression Ratio = {ratio}%\n")
 
+    if final_size > initial_size and method == 1:
+        print('-' * 100)
+        print('Compression Failed\nTrying another ghostscript compression method...')
+        print('-' * 100)
+        info = compress(input_file_path, output_file_path, level=4, method=2)
+        initial_size = info[0]
+        final_size = info[1]
+        ratio = info[2]
+
     return [initial_size, final_size, ratio]
+
 
 def get_ghostscript_path():
     gs_names = ['gs', 'gswin32', 'gswin64']
