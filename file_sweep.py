@@ -32,7 +32,8 @@ def file_sweep(src, url_base):
 
     rows = []
     search = os.path.join(src, '**')
-    for file in glob.glob(search, recursive=True):
+    files = sorted(glob.glob(search, recursive=True))  # sort alphanumerically
+    for file in files:
         if ".json" not in file and not os.path.isdir(file):
 
             file_abs = os.path.abspath(file) # absolute file path

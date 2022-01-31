@@ -1,9 +1,11 @@
-import glob
 import os
 from gs_compress import *
 import pandas as pd
 import argparse
 
+
+def isNaN(num):
+    return num != num
 
 def file_reorg(src):
 
@@ -12,20 +14,36 @@ def file_reorg(src):
     if os.path.exists(dest_base):
         shutil.rmtree(dest_base)  # remove existing directory for first run / another attempt
 
+    csv = pd.read_csv('file_sweep.csv')
+
     rows=[]
-    search = os.path.join(src, '**')
-    for file in glob.glob(search, recursive=True):
-        if ".json" not in file and not os.path.isdir(file):
+    for ind in csv.index:
 
-            file_abs_initial = os.path.abspath(file)  # absolute file path
-            file_rel_initial = os.path.relpath(file, src)  # file path relative to src
-            file_name_initial = file_rel_initial.split('/')[-1]  # everything after last '/'
+        file = csv['File'][ind]
+        category = csv['Category'][ind]
+        model = csv['Model'][ind]
 
-            file_size = os.path.getsize(file_abs_initial) / (1024 * 1024)  # convert bytes to megabytes
-            file_size = round(file_size, 2)  # 2 == precision after decimal
+        file_abs_initial = os.path.join(src, file)
+        file_abs_initial = os.path.abspath(file_abs_initial)  # absolute file path
+        file_rel_initial = os.path.relpath(file_abs_initial, src)  # file path relative to src
+        file_size = os.path.getsize(file_abs_initial) / (1024 * 1024)  # convert bytes to megabytes
+        file_size = round(file_size, 2)  # 2 == precision after decimal
 
-            file_abs_final = os.path.join(dest_base, file_rel_initial)
-            file_abs_final = os.path.abspath(file_abs_final)  # must be absolute for ghostcript
+        # only process files that aren't corrupt, ie. > 64 KB
+        if file_size * (1024 * 1024) > 64:
+
+            if not isNaN(category):
+
+                subfolder = os.path.join(dest_base, category)
+
+                if not isNaN(model):
+
+                    subfolder = os.path.join(subfolder, model)
+
+                file_abs_final = os.path.abspath(subfolder)  # must be absolute for ghostcript
+
+            else:
+                file_abs_final = os.path.join(dest_base, file_rel_initial)
 
             # in case file is in sub-folder
             dest = os.path.dirname(file_abs_final)
@@ -57,11 +75,10 @@ def file_reorg(src):
                 else:
                     shutil.copy(file_abs_initial, dest)
 
-            # if file > 64 Bytes, ie. not corrupted copy it over
-            elif file_size * (1024 * 1024) > 64:
+            else:
 
-                # copy original file to Files_Reduced to further sort
-                shutil.copy(file, dest)
+                # copy original file to Files_Reorg to further sort
+                shutil.copy(file_abs_initial, dest)
 
     df = pd.DataFrame(rows, columns=['File', 'Initial Size (MB)', 'Final Size (MB)', 'Compression Ratio (%)'])
     print(df)
