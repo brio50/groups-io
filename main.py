@@ -1,12 +1,12 @@
 from file_sweep import *
-from file_compress import *
+from file_reorg import *
 
 src = './hardinge-lathe/Files/'
 url_base = 'https://groups.io/g/hardinge-lathe/files/'
 
 # uncomment/comment as desired
 #file_sweep(src, url_base)
-file_compress(src)
+file_reorg(src)
 
 # after re-organization complete, add metadata to pdfs
 #pdf_metadata()

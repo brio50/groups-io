@@ -5,10 +5,10 @@ import pandas as pd
 import argparse
 
 
-def file_compress(src):
+def file_reorg(src):
 
     # concatenate "<src> + _Reduced" to form compression destination directory
-    dest_base = src.rstrip('\/') + '_Reduced'
+    dest_base = src.rstrip('\/') + '_Reorg'
     if os.path.exists(dest_base):
         shutil.rmtree(dest_base)  # remove existing directory for first run / another attempt
 
@@ -80,7 +80,7 @@ def main():
     args = parser.parse_args()
 
     # Run
-    file_compress(args.src)
+    file_reorg(args.src)
 
 
 if __name__ == "__main__":
