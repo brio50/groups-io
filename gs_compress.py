@@ -65,11 +65,11 @@ def compress(input_file_path, output_file_path, level=0, method=1):
                # image resample
                '-dDetectDuplicateImages=true',
                '-dColorImageDownsampleType=/Bicubic',
-               '-dColorImageResolution=150',
+               '-dColorImageResolution=300',
                '-dGrayImageDownsampleType=/Bicubic',
-               '-dGrayImageResolution=150',
+               '-dGrayImageResolution=300',
                '-dMonoImageDownsampleType=/Subsample',
-               '-dMonoImageResolution=150',
+               '-dMonoImageResolution=300',
                '-dDownsampleColorImages=true',
                # preset overrides
                '-dDoThumbnails=false',
@@ -84,7 +84,7 @@ def compress(input_file_path, output_file_path, level=0, method=1):
         cmd = [gs, '-sDEVICE=pdfwrite',
                '-dNumRenderingThreads=2',
                '-dPDFSETTINGS={}'.format(quality[level]),
-               '-dCompatibilityLevel=1.5',
+               '-dCompatibilityLevel=1.4',
                '-dNOPAUSE', '-dQUIET', '-dBATCH', '-dSAFER',
                '-dDetectDuplicateImages=true',
                '-sOutputFile={}'.format(output_file_path),
@@ -113,7 +113,7 @@ def compress(input_file_path, output_file_path, level=0, method=1):
         print('-' * 100)
         print('Compression Failed\nTrying another ghostscript compression method...')
         print('-' * 100)
-        info = compress(input_file_path, output_file_path, level=4, method=2)
+        info = compress(input_file_path, output_file_path, 4, 2)
         initial_size = info[0]
         final_size = info[1]
         ratio = info[2]

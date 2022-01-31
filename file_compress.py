@@ -10,51 +10,60 @@ def file_compress(src):
     # concatenate "<src> + _Reduced" to form compression destination directory
     dest_base = src.rstrip('\/') + '_Reduced'
     if os.path.exists(dest_base):
-        shutil.rmtree(dest_base) # remove existing directory for first run / another attempt
+        shutil.rmtree(dest_base)  # remove existing directory for first run / another attempt
 
     rows=[]
     search = os.path.join(src, '**')
     for file in glob.glob(search, recursive=True):
-        if file.endswith('.pdf') and not os.path.isdir(file): # could expand this someday to include images
+        if ".json" not in file and not os.path.isdir(file):
 
-            file_abs = os.path.abspath(file)  # absolute file path
-            file_rel = os.path.relpath(file, src)  # file path relative to src
+            file_abs_initial = os.path.abspath(file)  # absolute file path
+            file_rel_initial = os.path.relpath(file, src)  # file path relative to src
+            file_name_initial = file_rel_initial.split('/')[-1]  # everything after last '/'
 
-            file_name = file_rel.split('/')[-1]  # everything after last '/'
-
-            file_size = os.path.getsize(file_abs) / (1024 * 1024)  # convert bytes to megabytes
+            file_size = os.path.getsize(file_abs_initial) / (1024 * 1024)  # convert bytes to megabytes
             file_size = round(file_size, 2)  # 2 == precision after decimal
+
+            file_abs_final = os.path.join(dest_base, file_rel_initial)
+            file_abs_final = os.path.abspath(file_abs_final)  # must be absolute for ghostcript
+
+            # in case file is in sub-folder
+            dest = os.path.dirname(file_abs_final)
+
+            # ghost script will throw up if compression destination directories do not exist
+            if not os.path.exists(dest):
+                os.system(f'mkdir -p "{dest}"')  # don't know the equivalent in python
 
             # only compress files > 5 MB
             if file_size > 5:
 
-                file_abs_compressed = os.path.join(dest_base, file_rel)
-                file_abs_compressed = os.path.abspath(file_abs_compressed)  # must be absolute for ghostcript
+                if file.endswith('.pdf'):  # could expand this someday to include images
 
-                # in case file is in sub-folder
-                dest = os.path.dirname(file_abs_compressed)
+                    if os.path.exists(file_abs_initial):
+                        info = compress(file_abs_initial, file_abs_final, 2)
+                        initial_size = info[0]
+                        final_size = info[1]
+                        compression_ratio = info[2]
 
-                # ghost script will throw up if compression destination directories do not exist
-                if not os.path.exists(dest):
-                    os.system(f'mkdir -p "{dest}"')  # don't know the equivalent in python
+                        # if we cannot do better than original, use it
+                        if final_size > initial_size:
+                            print(f"Compression Failed, Using Original File @ {initial_size}MB")
+                            os.remove(file_abs_final)
+                            shutil.copy(file_abs_initial, dest)
 
-                if os.path.exists(file_abs):
-                    info = compress(file_abs, file_abs_compressed, 4)
+                        rows.append(
+                            [file_rel_initial, initial_size, final_size, compression_ratio])
 
-                    initial_size = info[0]
-                    final_size = info[1]
-                    compression_ratio = info[2]
+                else:
+                    shutil.copy(file_abs_initial, dest)
 
-                    # if we cannot do better than original, use it
-                    if final_size > initial_size:
-                        os.remove(file_abs_compressed)
-                        shutil.copy(file_abs, dest)
+            # if file > 64 Bytes, ie. not corrupted copy it over
+            elif file_size * (1024 * 1024) > 64:
 
-                    rows.append(
-                        [file_name, initial_size, final_size, compression_ratio])
+                # copy original file to Files_Reduced to further sort
+                shutil.copy(file, dest)
 
-    df = pd.DataFrame(rows,
-                      columns=['File', 'Initial Size (MB)', 'Final Size (MB)', 'Compression Ratio (%)'])
+    df = pd.DataFrame(rows, columns=['File', 'Initial Size (MB)', 'Final Size (MB)', 'Compression Ratio (%)'])
     print(df)
 
     # export dataframe to csv file
