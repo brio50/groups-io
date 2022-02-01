@@ -10,7 +10,7 @@ def isNaN(num):
 def file_reorg(src):
 
     # concatenate "<src> + _Reduced" to form compression destination directory
-    dest_base = src.rstrip('\/') + '_Reorg'
+    dest_base = src.rstrip(os.sep) + '_Reorg'
     if os.path.exists(dest_base):
         shutil.rmtree(dest_base)  # remove existing directory for first run / another attempt
 
@@ -52,7 +52,7 @@ def file_reorg(src):
 
             # ghost script will throw up if compression destination directories do not exist
             if not os.path.exists(dest):
-                os.system(f'mkdir -p "{dest}"')  # don't know the equivalent in python
+                os.makedirs(dest)
 
             # only compress files > 5 MB
             if file_size > 5:

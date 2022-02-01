@@ -36,13 +36,14 @@ def file_sweep(src, url_base):
     for file in files:
         if ".json" not in file and not os.path.isdir(file):
 
-            file_abs = os.path.abspath(file) # absolute file path
+            file_abs = os.path.abspath(file)  # absolute file path
             file_rel = os.path.relpath(file, src)  # file path relative to src
 
             file_url = url_base + file_rel
+            file_url = file_url.replace('\\', '/')  # in case we're running in windows
             file_url = file_url.replace(" ", "%20")  # urls use %20 in space
 
-            file_name = file_rel.split('/')[-1]  # everything after last '/'
+            file_name = file_rel.split(os.sep)[-1]  # everything after last '/'
             file_ext = os.path.splitext(file)[1]  # get file extension only
 
             file_size = os.path.getsize(file_abs) / (1024 * 1024)  # convert bytes to megabytes

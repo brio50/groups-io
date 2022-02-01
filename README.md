@@ -21,7 +21,7 @@ There are 3 tiers of groups.io: basic (free), premium, and enterprise. We're on 
 
 ---
 
-`file_compress.py` is envisioned to help compress any file type extracted from a groups.io project, however as of this writing, it presently only compresses `*.pdf` files using [ghostscript](https://www.ghostscript.com). At this point, it's also worth noting that this code was developed on a mac; to install ghostscript, open a terminal and type `brew install ghostscript`. The output is `file_compress.csv` which acts a file compression with metrics regarding Initial File Size (MB), Final File Size (MB), and Compression Ratio (%).
+`file_compress.py` is envisioned to help compress any file type extracted from a groups.io project, however as of this writing, it presently only compresses `*.pdf` files using [ghostscript](https://www.ghostscript.com). At this point, it's also worth mentioning that you'll need to install ghostscript for things to run properly. On a mac, open a terminal and type `brew install ghostscript`; on windows go to the [ghostscript website](https://www.ghostscript.com/), add the install location to your environment variables, and make sure to restart. The output is `file_compress.csv` which acts a file compression with metrics regarding Initial File Size (MB), Final File Size (MB), and Compression Ratio (%).
 
 `file_compress.csv`:
 ```
