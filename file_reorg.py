@@ -43,9 +43,11 @@ def file_reorg(src):
                 file_abs_final = os.path.abspath(subfolder)  # must be absolute for ghostcript
 
             else:
-                file_abs_final = os.path.join(dest_base, file_rel_initial)
 
-            # in case file is in sub-folder
+                # in case file is in sub-folder
+                file_abs_final = os.path.join(dest_base, file_rel_initial)
+                file_abs_final = os.path.abspath(file_abs_final)
+
             dest = os.path.dirname(file_abs_final)
 
             # ghost script will throw up if compression destination directories do not exist
