@@ -14,6 +14,7 @@ def file_reorg(src):
     if os.path.exists(dest_base):
         shutil.rmtree(dest_base)  # remove existing directory for first run / another attempt
 
+    # use file_sweep.csv to serve as basis for file reoganization
     csv = pd.read_csv('file_sweep.csv')
 
     rows=[]
@@ -26,29 +27,37 @@ def file_reorg(src):
         file_abs_initial = os.path.join(src, file)
         file_abs_initial = os.path.abspath(file_abs_initial)  # absolute file path
         file_rel_initial = os.path.relpath(file_abs_initial, src)  # file path relative to src
+        file_name = file_rel_initial.split(os.sep)[-1]
         file_size = os.path.getsize(file_abs_initial) / (1024 * 1024)  # convert bytes to megabytes
         file_size = round(file_size, 2)  # 2 == precision after decimal
 
         # only process files that aren't corrupt, ie. > 64 KB
         if file_size * (1024 * 1024) > 64:
 
-            if not isNaN(category):
+            # File Organization:
+            #   HISTORY (serial numbers, patents, etc.) := category == HISTORY
+            #   MODEL-NUMBER/                           := model identified & ...
+            #       manuals/                            := category == MANUAL
+            #       brochures/
+            #       drawings/
+            #       threading/
+            #       misc*.ext                           := model identified & category empty
+            #   MODEL-UNKNOWN                           := model empty & category identified
+            #   MISC                                    := model empty & category empty
 
-                subfolder = os.path.join(dest_base, category)
+            if isNaN(model) and isNaN(category):
+                subfolder = os.path.join(dest_base, 'MISC')
+            elif isNaN(model) and not isNaN(category):
+                subfolder = os.path.join(dest_base, 'MODEL-UNKNOWN', category)
+            elif not isNaN(model) and isNaN(category):
+                subfolder = os.path.join(dest_base, model)
+            elif not isNaN(model) and not isNaN(category):
+                subfolder = os.path.join(dest_base, model, category)
+            elif not isNaN(category) and 'history' in category:
+                subfolder = os.path.join(dest_base, 'HISTORY')
 
-                if not isNaN(model):
-
-                    subfolder = os.path.join(subfolder, model)
-
-                file_abs_final = os.path.abspath(subfolder)  # must be absolute for ghostcript
-
-            else:
-
-                # in case file is in sub-folder
-                file_abs_final = os.path.join(dest_base, file_rel_initial)
-                file_abs_final = os.path.abspath(file_abs_final)
-
-            dest = os.path.dirname(file_abs_final)
+            dest = os.path.abspath(subfolder)  # must be absolute for ghostcript
+            file_abs_final = os.path.join(dest, file_name)
 
             # ghost script will throw up if compression destination directories do not exist
             if not os.path.exists(dest):

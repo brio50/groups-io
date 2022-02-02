@@ -78,33 +78,33 @@ def file_sweep(src, url_base):
             elif 'assembly' in file_name.lower() or 'assembly' in json_desc.lower():
                 category = 'drawing'
             elif 'wiring' in file_name.lower() or 'wiring' in json_desc.lower():
-                category = 'wiring'
+                category = 'electrical'
             elif 'schematic' in file_name.lower() or 'schematic' in json_desc.lower():
-                category = 'wiring'
+                category = 'electrical'
             elif 'circuit' in file_name.lower() or 'circuit' in json_desc.lower():
-                category = 'wiring'
+                category = 'electrical'
             else:
                 category = ''
 
             # model search - case sensitive
             model = []
-            if 'AHC' in file_name:
+            if 'AHC' in file_rel:
                 model.append('AHC')
-            if 'DV59' in file_name:
+            if 'DV59' in file_rel:
                 model.append('DV59')
-            if 'HC' in file_name:
+            if 'HC' in file_rel:
                 model.append('HC')
-            if 'HCT' in file_name:
+            if 'HCT' in file_rel:
                 model.append('HCT')
-            if 'HLV' in file_name:
+            if 'HLV' in file_rel:
                 model.append('HLV')
-            if 'TL' in file_name:
+            if 'TL' in file_rel:
                 model.append('TL')
-            if 'T-10' in file_name:
+            if 'T-10' in file_rel:
                 model.append('T-10')
-            if 'TM' in file_name:
+            if 'TM' in file_rel:
                 model.append('TM')
-            if 'UM' in file_name:
+            if 'UM' in file_rel:
                 model.append('UM')
 
             # convert to semi-colon separated list for csv
