@@ -59,32 +59,22 @@ def file_sweep(src, url_base):
                 raise Exception(f"File Name and Json Names are not equal\n{file_name}\n{json_name}")
 
             # category search - case insensitive - within file name and description
-            if 'manual' in file_name.lower() or 'manual' in json_desc.lower():
-                category = 'manual'
-            elif 'brochure' in file_name.lower() or 'brochure' in json_desc.lower():
-                category = 'brochure'
-            elif 'bulletin' in file_name.lower() or 'bulletin' in json_desc.lower():
-                category = 'brochure'
-            elif 'gear' in file_name.lower() or 'gear' in json_desc.lower():
-                category = 'threading'
-            elif 'thread' in file_name.lower() or 'thread' in json_desc.lower():
-                category = 'threading'
-            elif 'serial' in file_name.lower() or 'serial' in json_desc.lower():
-                category = 'history'
-            elif 'patent' in file_name.lower() or 'patent' in json_desc.lower():
-                category = 'history'
-            elif 'drawing' in file_name.lower() or 'drawing' in json_desc.lower():
-                category = 'drawing'
-            elif 'assembly' in file_name.lower() or 'assembly' in json_desc.lower():
-                category = 'drawing'
-            elif 'wiring' in file_name.lower() or 'wiring' in json_desc.lower():
-                category = 'electrical'
-            elif 'schematic' in file_name.lower() or 'schematic' in json_desc.lower():
-                category = 'electrical'
-            elif 'circuit' in file_name.lower() or 'circuit' in json_desc.lower():
-                category = 'electrical'
-            else:
-                category = ''
+            subject = file_name.lower() + json_desc.lower()
+            match subject:
+                case 'manual':
+                    category = 'manual'
+                case 'brochure' | 'bulletin':
+                    category = 'brochure'
+                case 'gear' | 'thread':
+                    category = 'threading'
+                case 'serial' | 'patent':
+                    category = 'history'
+                case 'drawing' | 'assembly':
+                    category = 'drawing'
+                case 'wiring' | 'schematic' | 'circuit':
+                    category = 'electrical'
+                case _:
+                    category = ''
 
             # model search - case sensitive
             model = []
