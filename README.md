@@ -36,15 +36,13 @@ There are 3 tiers of groups.io: basic (free), premium, and enterprise. We're on 
 `main.py` calls both python scripts, and is where I selectively execute either `*sweep.py` or `*compress.py` from my Python IDE. This script shows the reader how to call the aforementioned `*.py` files.
 
 
---- 
+---
 
-
-
-
-File Organization:
+* https://groups.io/helpcenter/membersmanual/1/working-with-databases/importing-a-json-or-csv-file
 
 # File Organization:
 
+```
 # INDEX.CSV -- list of all files with descriptions
 #
 #   HISTORY (serial numbers, patents, etc.) := category == HISTORY
@@ -58,11 +56,11 @@ File Organization:
 #       misc*.ext                           := model identified & category empty
 #   MODEL-UNKNOWN                           := model empty & category identified
 #   MISC                                    := model empty & category empty
+```
 
-
-# MODEL RANGE:
+## MODEL NUMBERS:
 * Cataract - 1939 AND EARLIER
-* TL Series - Manual Tool Room Lathe - Most Activity lives here @ this - 1939 to 1949
+* TL Series - Manual Tool Room Lathe - Most Activity lives here at this - 1939 to 1949
     * TL
     * T-10
     * T-5 
@@ -74,5 +72,4 @@ File Organization:
 * AHC - Automatic Chucker - ?
 * CNC - Newer - ?
 
-
-NOTE in prior group, .jpg were allowed in YAHOO, 
+> **NOTE**:`.jpg` were allowed in Files section at YAHOO. to GROUPS-IO transition, those were allowed to come through. Not certain if `.jpg` are still allowed in GROUPS-IO Files today. 

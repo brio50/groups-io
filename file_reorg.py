@@ -34,34 +34,19 @@ def file_reorg(src):
         # only process files that aren't corrupt, ie. > 64 KB
         if file_size * (1024 * 1024) > 64:
 
-
-
-
-
             # File Organization:
-            #   HISTORY (serial numbers, patents, etc.) := category == HISTORY
-            #   MANUAL LATHE CHANGE GEARING
-            #       TL, HLV, and HLV-H
-            #   MODEL-NUMBER/                           := model identified & ...
-            #       manuals/                            := category == MANUAL
-            #       brochures/
-            #       drawings/
-            #       threading/
-            #       misc*.ext                           := model identified & category empty
-            #   MODEL-UNKNOWN                           := model empty & category identified
-            #   MISC                                    := model empty & category empty
-
-
-            if isNaN(model) and isNaN(category):
+            if not isNaN(category) and 'history' in category:
+                subfolder = os.path.join(dest_base, 'HISTORY')
+            elif not isNaN(category) and 'gearing' in category:
+                    subfolder = os.path.join(dest_base, 'MANUAL LATHE CHANGE GEARING')
+            elif not isNaN(model) and not isNaN(category):
+                subfolder = os.path.join(dest_base, model, category)
+            elif not isNaN(model) and isNaN(category):
+                subfolder = os.path.join(dest_base, model)
+            elif isNaN(model) and isNaN(category):
                 subfolder = os.path.join(dest_base, 'MISC')
             elif isNaN(model) and not isNaN(category):
                 subfolder = os.path.join(dest_base, 'MODEL-UNKNOWN', category)
-            elif not isNaN(model) and isNaN(category):
-                subfolder = os.path.join(dest_base, model)
-            elif not isNaN(model) and not isNaN(category):
-                subfolder = os.path.join(dest_base, model, category)
-            elif not isNaN(category) and 'history' in category:
-                subfolder = os.path.join(dest_base, 'HISTORY')
 
             dest = os.path.abspath(subfolder)  # must be absolute for ghostcript
             file_abs_final = os.path.join(dest, file_name)
