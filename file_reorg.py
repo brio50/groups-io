@@ -34,8 +34,14 @@ def file_reorg(src):
         # only process files that aren't corrupt, ie. > 64 KB
         if file_size * (1024 * 1024) > 64:
 
+
+
+
+
             # File Organization:
             #   HISTORY (serial numbers, patents, etc.) := category == HISTORY
+            #   MANUAL LATHE CHANGE GEARING
+            #       TL, HLV, and HLV-H
             #   MODEL-NUMBER/                           := model identified & ...
             #       manuals/                            := category == MANUAL
             #       brochures/
@@ -44,6 +50,7 @@ def file_reorg(src):
             #       misc*.ext                           := model identified & category empty
             #   MODEL-UNKNOWN                           := model empty & category identified
             #   MISC                                    := model empty & category empty
+
 
             if isNaN(model) and isNaN(category):
                 subfolder = os.path.join(dest_base, 'MISC')

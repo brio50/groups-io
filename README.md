@@ -35,3 +35,44 @@ There are 3 tiers of groups.io: basic (free), premium, and enterprise. We're on 
 
 `main.py` calls both python scripts, and is where I selectively execute either `*sweep.py` or `*compress.py` from my Python IDE. This script shows the reader how to call the aforementioned `*.py` files.
 
+
+--- 
+
+
+
+
+File Organization:
+
+# File Organization:
+
+# INDEX.CSV -- list of all files with descriptions
+#
+#   HISTORY (serial numbers, patents, etc.) := category == HISTORY
+#   MANUAL LATHE CHANGE GEARING
+#       TL, HLV, and HLV-H -- THIS IS COMMON TO ALL 3 LATHES up to 2008
+#   MODEL-NUMBER/                           := model identified & ...
+#       manuals/                            := category == MANUAL
+#       brochures/
+#       drawings/
+#       threading/
+#       misc*.ext                           := model identified & category empty
+#   MODEL-UNKNOWN                           := model empty & category identified
+#   MISC                                    := model empty & category empty
+
+
+# MODEL RANGE:
+* Cataract - 1939 AND EARLIER
+* TL Series - Manual Tool Room Lathe - Most Activity lives here @ this - 1939 to 1949
+    * TL
+    * T-10
+    * T-5 
+* HLV - Manual Tool Room Lathe - 1950 to 1959
+* HLV-H - Manual Tool Room Lath - 1960 to 2008
+* TR/ESM - Second Operation - 1930s to 1940s
+* DV/DSM - Second Operation - 1940s to 2000s
+* HC - Manual Chucker - ?
+* AHC - Automatic Chucker - ?
+* CNC - Newer - ?
+
+
+NOTE in prior group, .jpg were allowed in YAHOO, 
