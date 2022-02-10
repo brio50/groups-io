@@ -59,17 +59,17 @@ There are 3 tiers of groups.io: basic (free), premium, and enterprise. We're on 
 ```
 
 ## MODEL NUMBERS:
-* Cataract - 1939 AND EARLIER
+* Cataract - 1903 to 1939
+* TR/ESM - Second Operation - 1930s to 1940s
+* DV/DSM - Second Operation - 1940s to 2000s
 * TL Series - Manual Tool Room Lathe - Most Activity lives here at this - 1939 to 1949
     * TL
     * T-10
     * T-5 
 * HLV - Manual Tool Room Lathe - 1950 to 1959
-* HLV-H - Manual Tool Room Lath - 1960 to 2008
-* TR/ESM - Second Operation - 1930s to 1940s
-* DV/DSM - Second Operation - 1940s to 2000s
-* HC - Manual Chucker - ?
-* AHC - Automatic Chucker - ?
-* CNC - Newer - ?
+* HLV-H - Manual Tool Room Lathe - 1960 to 2008
+* HC - Manual Chucker
+* AHC - Automatic Chucker
+* CNC - Newer
 
 > **NOTE**:`.jpg` were allowed in Files section at YAHOO. to GROUPS-IO transition, those were allowed to come through. Not certain if `.jpg` are still allowed in GROUPS-IO Files today. 
